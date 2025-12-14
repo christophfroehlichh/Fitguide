@@ -17,19 +17,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'FitGuide',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ],
-      ),
       body: const SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(16, 16, 16, 24),

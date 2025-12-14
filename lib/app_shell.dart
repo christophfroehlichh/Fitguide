@@ -23,6 +23,19 @@ class _AppShellState extends State<AppShell> {
     };
 
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'FitGuide',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {}, // später: Settings-Screen
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
+      ),
       body: body,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,

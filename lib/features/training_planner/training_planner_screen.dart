@@ -6,13 +6,6 @@ class TrainingPlannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'FitGuide',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-      ),
       body: Column(
         children: [
           Expanded(
