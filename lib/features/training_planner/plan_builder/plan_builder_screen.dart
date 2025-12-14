@@ -50,7 +50,7 @@ class _PlansAccordion extends StatefulWidget {
 }
 
 class _PlansAccordionState extends State<_PlansAccordion> {
-  String? _openPlanId; // nur EINER offen
+  String? _openPlanId;
 
   void _toggle(String id) {
     setState(() {
@@ -88,23 +88,30 @@ class _PlanHeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         decoration: BoxDecoration(
-          color: isOpen ? Colors.green.withOpacity(0.25) : null,
-          border: Border.all(color: Colors.black26),
+          color: isOpen ? scheme.primaryContainer : scheme.surface,
+          border: Border.all(color: scheme.outlineVariant),
         ),
         child: Row(
           children: [
             Expanded(
-              child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+              child: Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: scheme.onSurface),
+              ),
             ),
             Icon(
               isOpen ? Icons.expand_less : Icons.expand_more,
-              color: Colors.black54,
+              color: scheme.onSurfaceVariant,
             ),
           ],
         ),
@@ -119,13 +126,16 @@ class _PlanBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        color: scheme.surface,
         border: Border(
-          left: BorderSide(color: Colors.black26),
-          right: BorderSide(color: Colors.black26),
-          bottom: BorderSide(color: Colors.black26),
+          left: BorderSide(color: scheme.outlineVariant),
+          right: BorderSide(color: scheme.outlineVariant),
+          bottom: BorderSide(color: scheme.outlineVariant),
         ),
       ),
       child: Column(children: [for (final ex in exercises) _RowLine(text: ex)]),
@@ -139,13 +149,20 @@ class _RowLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.black26)),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: scheme.outlineVariant)),
       ),
-      child: Text(text, style: Theme.of(context).textTheme.titleLarge),
+      child: Text(
+        text,
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(color: scheme.onSurface),
+      ),
     );
   }
 }
