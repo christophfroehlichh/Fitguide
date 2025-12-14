@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/dashboard/dashboard_screen.dart';
+import 'app_shell.dart';
 
 void main() => runApp(const FitGuideApp());
 
@@ -12,7 +12,7 @@ class FitGuideApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'FitGuide',
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.green),
-      home: const DashboardScreen(),
+      home: const AppShell(),
     );
   }
 }

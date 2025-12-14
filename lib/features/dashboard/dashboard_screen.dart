@@ -59,25 +59,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) => setState(() => _currentIndex = i),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            label: '',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.fitness_center_outlined),
-            label: '',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.checklist_outlined),
-            label: '',
-          ),
-          NavigationDestination(icon: Icon(Icons.book_outlined), label: ''),
-        ],
-      ),
     );
   }
 }
