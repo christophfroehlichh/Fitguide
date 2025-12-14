@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_shell.dart';
+import 'core/theme/app_theme.dart';
 
 void main() => runApp(const FitGuideApp());
 
@@ -11,7 +12,9 @@ class FitGuideApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'FitGuide',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.green),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ThemeMode.system,
       home: const AppShell(),
     );
   }
