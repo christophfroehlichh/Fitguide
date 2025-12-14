@@ -18,7 +18,7 @@ class PlanBuilderScreen extends StatelessWidget {
     const TrainingPlan(id: 'p3', name: 'Plan 3', exercises: ['Übung X']),
     const TrainingPlan(
       id: 'p4',
-      name: 'Plan 4',
+      name: 'Plan 5',
       exercises: ['Übung Y', 'Übung Z'],
     ),
   ];
@@ -50,47 +50,85 @@ class _PlansAccordion extends StatefulWidget {
 }
 
 class _PlansAccordionState extends State<_PlansAccordion> {
-  // ExpansionPanelList.radio verwaltet “nur eins offen” selbst,
-  // aber wir nutzen isExpanded aus headerBuilder fürs grüne Highlight.
+  String? _openPlanId; // nur EINER offen
+
+  void _toggle(String id) {
+    setState(() {
+      _openPlanId = (_openPlanId == id) ? null : id;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionPanelList.radio(
-      elevation: 0,
-      expandedHeaderPadding: EdgeInsets.zero,
-      children: widget.plans.map((plan) {
-        return ExpansionPanelRadio(
-          value: plan.id,
-          canTapOnHeader: true,
-          headerBuilder: (context, isExpanded) {
-            return Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              decoration: BoxDecoration(
-                color: isExpanded ? Colors.green.withOpacity(0.25) : null,
-                border: Border.all(color: Colors.black26),
-              ),
-              child: Text(
-                plan.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            );
-          },
-          body: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(color: Colors.black26),
-                right: BorderSide(color: Colors.black26),
-                bottom: BorderSide(color: Colors.black26),
-              ),
-            ),
-            child: Column(
-              children: [for (final ex in plan.exercises) _RowLine(text: ex)],
-            ),
+    return Column(
+      children: [
+        for (final plan in widget.plans) ...[
+          _PlanHeaderRow(
+            title: plan.name,
+            isOpen: _openPlanId == plan.id,
+            onTap: () => _toggle(plan.id),
           ),
-        );
-      }).toList(),
+          if (_openPlanId == plan.id) _PlanBody(exercises: plan.exercises),
+        ],
+      ],
+    );
+  }
+}
+
+class _PlanHeaderRow extends StatelessWidget {
+  final String title;
+  final bool isOpen;
+  final VoidCallback onTap;
+
+  const _PlanHeaderRow({
+    required this.title,
+    required this.isOpen,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        decoration: BoxDecoration(
+          color: isOpen ? Colors.green.withOpacity(0.25) : null,
+          border: Border.all(color: Colors.black26),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+            ),
+            Icon(
+              isOpen ? Icons.expand_less : Icons.expand_more,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlanBody extends StatelessWidget {
+  final List<String> exercises;
+  const _PlanBody({required this.exercises});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(color: Colors.black26),
+          right: BorderSide(color: Colors.black26),
+          bottom: BorderSide(color: Colors.black26),
+        ),
+      ),
+      child: Column(children: [for (final ex in exercises) _RowLine(text: ex)]),
     );
   }
 }
