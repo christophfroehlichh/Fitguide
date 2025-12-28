@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "672829287029",
+    "project_id": "fitguide-christoph",
+    "storage_bucket": "fitguide-christoph.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672829287029:android:9ae486805a2934d726263c",
+        "android_client_info": {
+          "package_name": "com.example.fitguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCow891-PDQoFx5h97KMa2y6NxOJORa800"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
