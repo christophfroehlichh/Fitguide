@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'widgets/big_action_tile.dart';
-import 'plan_builder/plan_builder_screen.dart';
+import '../widgets/big_action_tile.dart';
+import '../plan_builder/screens/plan_builder_screen.dart';
 
-class TrainingPlannerScreen extends StatelessWidget {
-  const TrainingPlannerScreen({super.key});
+class TrainingOverviewScreen extends StatelessWidget {
+  const TrainingOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

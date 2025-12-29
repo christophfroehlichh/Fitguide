@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'widgets/section_title.dart';
-import 'widgets/calendar_strip.dart';
-import 'widgets/weight_card.dart';
-import 'widgets/macro_overview.dart';
+import '../widgets/section_title.dart';
+import '../widgets/calendar_strip.dart';
+import '../widgets/weight_card.dart';
+import '../widgets/macro_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

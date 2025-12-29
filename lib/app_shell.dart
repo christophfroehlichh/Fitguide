@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'features/dashboard/dashboard_screen.dart';
-import 'features/training_planner/training_planner_screen.dart';
+import 'features/dashboard/screens/dashboard_screen.dart';
+import 'features/training/screens/training_overview_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -16,8 +16,8 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final Widget body = switch (_currentIndex) {
       0 => const DashboardScreen(),
-      1 => const Placeholder(), // Training Planner (kommt später)
-      2 => const TrainingPlannerScreen(),
+      1 => const Placeholder(), // Training Execution (kommt später)
+      2 => const TrainingOverviewScreen(),
       3 => const Placeholder(),
       _ => const DashboardScreen(),
     };

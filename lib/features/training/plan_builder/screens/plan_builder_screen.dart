@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'models/training_plan.dart';
-import 'widgets/plans_accordion.dart';
+import '../models/training_plan.dart';
+import '../widgets/plans_accordion.dart';
 
 class PlanBuilderScreen extends StatelessWidget {
   const PlanBuilderScreen({super.key});
