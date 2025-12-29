@@ -48,17 +48,14 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        // Show splash screen while initializing or loading
         if (state is AuthInitial || state is AuthLoading) {
           return const SplashScreen();
         }
 
-        // Show login screen if not authenticated
         if (state is Unauthenticated) {
           return const LoginScreen();
         }
 
-        // Show onboarding if authenticated but hasn't completed onboarding
         if (state is Authenticated) {
           if (!state.user.hasCompletedOnboarding) {
             return const OnboardingScreen();
@@ -66,7 +63,6 @@ class AuthWrapper extends StatelessWidget {
           return const AppShell();
         }
 
-        // Default to splash screen
         return const SplashScreen();
       },
     );

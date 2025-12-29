@@ -55,8 +55,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             );
           }
           if (state is Authenticated) {
-            // Registration successful - pop back to login
-            // The AuthWrapper will handle navigation to onboarding
             Navigator.pop(context);
           }
         },

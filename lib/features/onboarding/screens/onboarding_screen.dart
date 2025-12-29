@@ -93,7 +93,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
       body: Column(
         children: [
-          // Progress indicator
           LinearProgressIndicator(
             value: (_currentPage + 1) / 5,
           ),
@@ -117,7 +116,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
 
-          // Navigation buttons
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -144,7 +142,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Step 1: Name
   Widget _buildNamePage() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -173,7 +170,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Step 2: Body Data
   Widget _buildBodyDataPage() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -219,7 +215,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Step 3: Goal
   Widget _buildGoalPage() {
     final goals = ['Abnehmen', 'Muskelaufbau', 'Halten'];
 
@@ -263,7 +258,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Step 4: Activity Level
   Widget _buildActivityPage() {
     final activities = {
       'Sedentary': 'Wenig bis keine Bewegung',
@@ -322,7 +316,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Step 5: Training
   Widget _buildTrainingPage() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -337,7 +330,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 32),
 
-          // Training Frequency
           Text(
             'Wie oft möchtest du trainieren?',
             style: Theme.of(context).textTheme.titleMedium,
@@ -361,7 +353,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 32),
 
-          // Training Duration
           Text(
             'Wie lange pro Training? (Minuten)',
             style: Theme.of(context).textTheme.titleMedium,
