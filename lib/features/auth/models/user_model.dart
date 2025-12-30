@@ -4,8 +4,9 @@ class UserModel extends Equatable {
   final String uid;
   final String email;
   final String name;
-  final double? height; 
-  final double? weight; 
+  final int? age;          
+  final double? height;    
+  final double? weight;    
   final String? goal; 
   final String? activityLevel; 
   final int? trainingFrequency; 
@@ -22,6 +23,7 @@ class UserModel extends Equatable {
     required this.uid,
     required this.email,
     required this.name,
+    this.age,
     this.height,
     this.weight,
     this.goal,
@@ -57,6 +59,7 @@ class UserModel extends Equatable {
     String? uid,
     String? email,
     String? name,
+    int? age,
     double? height,
     double? weight,
     String? goal,
@@ -75,6 +78,7 @@ class UserModel extends Equatable {
       uid: uid ?? this.uid,
       email: email ?? this.email,
       name: name ?? this.name,
+      age: age ?? this.age,
       height: height ?? this.height,
       weight: weight ?? this.weight,
       goal: goal ?? this.goal,
@@ -98,6 +102,7 @@ class UserModel extends Equatable {
       'uid': uid,
       'email': email,
       'name': name,
+      'age': age,
       'height': height,
       'weight': weight,
       'goal': goal,
@@ -120,6 +125,7 @@ class UserModel extends Equatable {
       uid: map['uid'] as String,
       email: map['email'] as String,
       name: map['name'] as String? ?? '',
+      age: map['age'] as int?,
       height: map['height']?.toDouble(),
       weight: map['weight']?.toDouble(),
       goal: map['goal'] as String?,
@@ -141,6 +147,7 @@ class UserModel extends Equatable {
         uid,
         email,
         name,
+        age,
         height,
         weight,
         goal,

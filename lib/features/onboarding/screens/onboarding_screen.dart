@@ -14,8 +14,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Form data
   final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
   String? _goal;
@@ -27,6 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     _nameController.dispose();
+    _ageController.dispose();
     _heightController.dispose();
     _weightController.dispose();
     super.dispose();
@@ -57,7 +58,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       case 0:
         return _nameController.text.isNotEmpty;
       case 1:
-        return _heightController.text.isNotEmpty &&
+        return _ageController.text.isNotEmpty &&
+            _heightController.text.isNotEmpty &&
             _weightController.text.isNotEmpty;
       case 2:
         return _goal != null;
@@ -75,6 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     context.read<AuthCubit>().completeOnboarding(
           name: _nameController.text.trim(),
+          age: int.parse(_ageController.text),
           height: double.parse(_heightController.text),
           weight: double.parse(_weightController.text),
           goal: _goal!,
@@ -183,6 +186,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
+          TextField(
+            controller: _ageController,
+            decoration: const InputDecoration(
+              labelText: 'Alter (Jahre)',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.cake_outlined),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: 16),
           TextField(
             controller: _heightController,
             decoration: const InputDecoration(

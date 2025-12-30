@@ -144,6 +144,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> completeOnboarding({
     required String name,
+    required int age,
     required double height,
     required double weight,
     required String goal,
@@ -156,6 +157,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (currentState is! Authenticated) return;
 
       final calories = _calculateDailyCalories(
+        age: age,
         weight: weight,
         height: height,
         activityLevel: activityLevel,
@@ -166,6 +168,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       final updatedUser = currentState.user.copyWith(
         name: name,
+        age: age,
         height: height,
         weight: weight,
         goal: goal,
@@ -187,13 +190,14 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   int _calculateDailyCalories({
+    required int age,
     required double weight,
     required double height,
     required String activityLevel,
     required String goal,
   }) {
 
-    final bmr = (10 * weight) + (6.25 * height) - (5 * 25) + 5;
+    final bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
 
     final activityMultiplier = switch (activityLevel) {
       'Sedentary' => 1.2,
