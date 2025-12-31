@@ -1,26 +1,63 @@
 import 'package:flutter/material.dart';
 
 class MacroOverview extends StatelessWidget {
-  const MacroOverview({super.key});
+  final int calories;
+  final int protein;
+  final int carbs;
+  final int fats;
+
+  const MacroOverview({
+    super.key,
+    required this.calories,
+    required this.protein,
+    required this.carbs,
+    required this.fats,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Expanded(
-          child: MacroCard(
-            label: 'Protein',
-            value: '180g',
-            color: Colors.green,
-          ),
+    return Column(
+      children: [
+        // Erste Reihe: Kalorien + Protein
+        Row(
+          children: [
+            Expanded(
+              child: MacroCard(
+                label: 'Kalorien',
+                value: '${calories}kcal',
+                color: Colors.purple,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: MacroCard(
+                label: 'Protein',
+                value: '${protein}g',
+                color: Colors.green,
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 12),
-        Expanded(
-          child: MacroCard(label: 'Carbs', value: '220g', color: Colors.orange),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: MacroCard(label: 'Fat', value: '70g', color: Colors.blue),
+        const SizedBox(height: 12),
+        // Zweite Reihe: Carbs + Fats
+        Row(
+          children: [
+            Expanded(
+              child: MacroCard(
+                label: 'Carbs',
+                value: '${carbs}g',
+                color: Colors.orange,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: MacroCard(
+                label: 'Fette',
+                value: '${fats}g',
+                color: Colors.blue,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -51,13 +88,16 @@ class MacroCard extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: color,
               ),
             ),
             const SizedBox(height: 6),
-            Text(label, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
       ),

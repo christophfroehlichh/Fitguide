@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class WeightCard extends StatelessWidget {
-  const WeightCard({super.key});
+  final double? currentWeight; // in kg
+
+  const WeightCard({
+    super.key,
+    this.currentWeight,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,19 +18,45 @@ class WeightCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Aktuelles Gewicht',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Aktuelles Gewicht',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                if (currentWeight != null)
+                  Text(
+                    '${currentWeight!.toStringAsFixed(1)} kg',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  )
+                else
+                  Text(
+                    '- kg',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+              ],
             ),
             const SizedBox(height: 16),
+            // Placeholder für zukünftigen Gewichtsverlauf-Graph
             SizedBox(
-              height: 150,
+              height: 120,
               width: double.infinity,
-              child: CustomPaint(
-                painter: WeightChartPainter(
-                  values: const [92.4, 92.1, 91.9, 91.7, 91.5, 80.3],
+              child: Center(
+                child: Text(
+                  'Gewichtsverlauf wird hier angezeigt',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
               ),
             ),
@@ -34,37 +65,4 @@ class WeightCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class WeightChartPainter extends CustomPainter {
-  final List<double> values;
-  WeightChartPainter({required this.values});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.green
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-
-    final min = values.reduce((a, b) => a < b ? a : b);
-    final max = values.reduce((a, b) => a > b ? a : b);
-    final range = max - min;
-
-    final path = Path();
-    for (int i = 0; i < values.length; i++) {
-      final x = size.width / (values.length - 1) * i;
-      final y = size.height - ((values[i] - min) / range) * size.height;
-
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
-    }
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
