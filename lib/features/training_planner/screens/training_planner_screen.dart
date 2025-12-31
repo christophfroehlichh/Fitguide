@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/big_action_tile.dart';
 import '../plan_builder/screens/plan_builder_screen.dart';
+import '../exercise_pool/screens/exercise_pool_screen.dart';
 
 class TrainingPlannerScreen extends StatelessWidget {
   const TrainingPlannerScreen({super.key});
@@ -26,7 +27,12 @@ class TrainingPlannerScreen extends StatelessWidget {
           child: BigActionTile(
             title: 'Übungen',
             icon: Icons.fitness_center_outlined,
-            onTap: () {}, // später Navigation
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ExercisePoolScreen()),
+              );
+            },
           ),
         ),
       ],
