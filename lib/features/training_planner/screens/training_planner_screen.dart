@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/big_action_tile.dart';
-import '../plan_builder/screens/plan_builder_screen.dart';
+import '../plan_builder/screens/workout_list_screen.dart';
 import '../exercise_pool/screens/exercise_pool_screen.dart';
 
 class TrainingPlannerScreen extends StatelessWidget {
@@ -17,7 +17,7 @@ class TrainingPlannerScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const PlanBuilderScreen()),
+                MaterialPageRoute(builder: (_) => const WorkoutListScreen()),
               );
             },
           ),
