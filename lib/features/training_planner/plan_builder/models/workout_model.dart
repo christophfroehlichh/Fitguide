@@ -117,4 +117,19 @@ class WorkoutModel extends Equatable {
       updatedAt: (map['updatedAt'] as Timestamp).toDate(),
     );
   }
+
+  factory WorkoutModel.fromTemplate(Map<String, dynamic> map) {
+    final now = DateTime.now();
+    return WorkoutModel(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      isActive: false,
+      exercises: (map['exercises'] as List<dynamic>)
+          .map((e) => WorkoutExercise.fromMap(e as Map<String, dynamic>))
+          .toList(),
+      templateId: null,
+      createdAt: now,
+      updatedAt: now,
+    );
+  }
 }

@@ -1,0 +1,376 @@
+{
+  "template_exercises": [
+    {
+      "id": "ex_bench_press",
+      "name": "Bankdrücken",
+      "category": "Chest",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_incline_press",
+      "name": "Schrägbankdrücken",
+      "category": "Chest",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_pushups",
+      "name": "Liegestütze",
+      "category": "Chest",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_pullups",
+      "name": "Klimmzüge",
+      "category": "Back",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_lat_pulldown",
+      "name": "Latziehen",
+      "category": "Back",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_barbell_row",
+      "name": "Langhantelrudern",
+      "category": "Back",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_squat",
+      "name": "Kniebeugen",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_leg_press",
+      "name": "Beinpresse",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_deadlift",
+      "name": "Kreuzheben",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_rdl",
+      "name": "Rumänisches Kreuzheben",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_leg_extension",
+      "name": "Beinstrecker",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_leg_curl",
+      "name": "Beinbeuger",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_calf_raise",
+      "name": "Wadenheben",
+      "category": "Legs",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_shoulder_press",
+      "name": "Schulterdrücken",
+      "category": "Shoulders",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_lateral_raise",
+      "name": "Seitheben",
+      "category": "Shoulders",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_face_pull",
+      "name": "Face Pulls",
+      "category": "Shoulders",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_biceps_curl",
+      "name": "Bizepscurls",
+      "category": "Arms",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_hammer_curl",
+      "name": "Hammer Curls",
+      "category": "Arms",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_triceps_pushdown",
+      "name": "Trizepsdrücken",
+      "category": "Arms",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_dips",
+      "name": "Dips",
+      "category": "Arms",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_plank",
+      "name": "Plank",
+      "category": "Core",
+      "iconUrl": "",
+      "templateId": null
+    },
+    {
+      "id": "ex_crunch",
+      "name": "Crunches",
+      "category": "Core",
+      "iconUrl": "",
+      "templateId": null
+    }
+  ],
+  "template_workouts": [
+    {
+      "id": "gk_1x_a",
+      "name": "Ganzkörper A (1x/Woche)",
+      "exercises": [
+        {
+          "exerciseId": "ex_squat",
+          "sets": 3,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_bench_press",
+          "sets": 3,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_barbell_row",
+          "sets": 3,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_shoulder_press",
+          "sets": 2,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_plank",
+          "sets": 3,
+          "reps": 30,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "gk_2x_b",
+      "name": "Ganzkörper B (2x/Woche)",
+      "exercises": [
+        {
+          "exerciseId": "ex_deadlift",
+          "sets": 2,
+          "reps": 5,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_incline_press",
+          "sets": 3,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_lat_pulldown",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_leg_curl",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "ok_a",
+      "name": "Oberkörper A",
+      "exercises": [
+        {
+          "exerciseId": "ex_bench_press",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_pullups",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_lateral_raise",
+          "sets": 3,
+          "reps": 12,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_biceps_curl",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "uk_a",
+      "name": "Unterkörper A",
+      "exercises": [
+        {
+          "exerciseId": "ex_squat",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_rdl",
+          "sets": 3,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_leg_press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_calf_raise",
+          "sets": 4,
+          "reps": 12,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "ppl_push",
+      "name": "Push",
+      "exercises": [
+        {
+          "exerciseId": "ex_bench_press",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_incline_press",
+          "sets": 3,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_shoulder_press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_triceps_pushdown",
+          "sets": 3,
+          "reps": 12,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "ppl_pull",
+      "name": "Pull",
+      "exercises": [
+        {
+          "exerciseId": "ex_pullups",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_barbell_row",
+          "sets": 4,
+          "reps": 8,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_face_pull",
+          "sets": 3,
+          "reps": 12,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_hammer_curl",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "id": "ppl_legs",
+      "name": "Legs",
+      "exercises": [
+        {
+          "exerciseId": "ex_squat",
+          "sets": 4,
+          "reps": 6,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_leg_press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_leg_curl",
+          "sets": 3,
+          "reps": 10,
+          "weight": 0
+        },
+        {
+          "exerciseId": "ex_calf_raise",
+          "sets": 4,
+          "reps": 12,
+          "weight": 0
+        }
+      ]
+    }
+  ]
+}
