@@ -10,9 +10,6 @@ class AppTheme {
   }
 
   static ThemeData dark() {
-    return FlexThemeData.dark(
-      scheme: FlexScheme.flutterDash,
-      useMaterial3: true,
-    );
+    return ThemeData(useMaterial3: true, brightness: Brightness.dark);
   }
 }

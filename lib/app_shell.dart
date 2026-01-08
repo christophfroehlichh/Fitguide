@@ -3,6 +3,7 @@ import 'features/dashboard/screens/dashboard_screen.dart';
 import 'features/training/screens/training_screen.dart';
 import 'features/training_planner/screens/training_planner_screen.dart';
 import 'features/logbook/screens/logbook_screen.dart';
+import 'features/settings/screens/settings_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -33,7 +34,13 @@ class _AppShellState extends State<AppShell> {
         ),
         actions: [
           IconButton(
-            onPressed: () {}, // später: Settings-Screen
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
             icon: const Icon(Icons.settings_outlined),
           ),
         ],

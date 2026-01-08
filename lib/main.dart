@@ -6,6 +6,7 @@ import 'app_shell.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/template_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_cubit.dart';
 import 'features/auth/cubit/auth_cubit.dart';
 import 'features/auth/cubit/auth_state.dart';
 import 'features/auth/screens/login_screen.dart';
@@ -28,18 +29,29 @@ class FitGuideApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(
-        authService: AuthService(),
-        templateService: TemplateService(),
-      ),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'FitGuide',
-        theme: AppTheme.dark(),
-        darkTheme: AppTheme.dark(),
-        themeMode: ThemeMode.system,
-        home: const AuthWrapper(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthCubit(
+            authService: AuthService(),
+            templateService: TemplateService(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ThemeCubit(),
+        ),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'FitGuide',
+            theme: AppTheme.light(),
+            darkTheme: AppTheme.dark(),
+            themeMode: themeMode,
+            home: const AuthWrapper(),
+          );
+        },
       ),
     );
   }
