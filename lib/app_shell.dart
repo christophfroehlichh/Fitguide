@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'features/dashboard/screens/dashboard_screen.dart';
 import 'features/training/screens/training_screen.dart';
 import 'features/training_planner/screens/training_planner_screen.dart';
+import 'features/logbook/screens/logbook_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -19,7 +20,7 @@ class _AppShellState extends State<AppShell> {
       0 => const DashboardScreen(),
       1 => const TrainingScreen(),
       2 => const TrainingPlannerScreen(),
-      3 => const Placeholder(),
+      3 => const LogbookScreen(),
       _ => const DashboardScreen(),
     };
 
