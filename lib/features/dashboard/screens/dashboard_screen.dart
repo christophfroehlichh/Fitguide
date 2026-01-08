@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth/cubit/auth_cubit.dart';
 import '../../auth/cubit/auth_state.dart';
+import '../../logbook/diary/cubit/diary_cubit.dart';
+import '../../logbook/diary/cubit/diary_state.dart';
 import '../widgets/section_title.dart';
 import '../widgets/calendar_strip.dart';
 import '../widgets/weight_card.dart';
@@ -15,14 +17,49 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
+          builder: (context, authState) {
             // Extrahiere User-Daten wenn authenticated
-            final user = state is Authenticated ? state.user : null;
+            final user = authState is Authenticated ? authState.user : null;
             final hasData = user?.hasCompletedOnboarding ?? false;
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: Column(
+            if (user == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return BlocProvider(
+              create: (context) => DiaryCubit(userId: user.uid),
+              child: BlocBuilder<DiaryCubit, DiaryState>(
+                builder: (context, diaryState) {
+                  // Extrahiere Gewichtsverlauf aus Diary-Einträgen
+                  final weightHistory = diaryState is DiaryLoaded
+                      ? diaryState.entries
+                          .map((entry) => WeightDataPoint(
+                                date: entry.date,
+                                weight: entry.weight,
+                              ))
+                          .toList()
+                      : <WeightDataPoint>[];
+
+                  return _buildDashboardContent(context, user, hasData, weightHistory);
+                },
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardContent(
+    BuildContext context,
+    user,
+    bool hasData,
+    List<WeightDataPoint> weightHistory,
+  ) {
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SectionTitle('Kalender'),
@@ -34,7 +71,8 @@ class DashboardScreen extends StatelessWidget {
                   const SectionTitle('Gewicht'),
                   const SizedBox(height: 12),
                   WeightCard(
-                    currentWeight: user?.weight,
+                    currentWeight: user.weight,
+                    weightHistory: weightHistory,
                   ),
                   const SizedBox(height: 28),
                   Row(
@@ -70,11 +108,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                ],
-              ),
-            );
-          },
-        ),
+        ],
       ),
     );
   }
