@@ -16,10 +16,10 @@ class AuthCubit extends Cubit<AuthState> {
     required AuthService authService,
     FirebaseFirestore? firestore,
     TemplateService? templateService,
-  })  : _authService = authService,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _templateService = templateService ?? TemplateService(),
-        super(AuthInitial()) {
+  }) : _authService = authService,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _templateService = templateService ?? TemplateService(),
+       super(AuthInitial()) {
     _initialize();
   }
 
@@ -71,13 +71,17 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     try {
+      print('1. Emitting AuthLoading');
       emit(AuthLoading());
       await _authService.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      print('2. Login successful');
     } catch (e) {
-      emit(AuthError(e.toString()));
+      print('3. Login failed: $e');
+      print('4. Emitting AuthError');
+      emit(AuthError('E-Mail oder Passwort nicht korrekt')); // KEIN const!
     }
   }
 
@@ -101,7 +105,6 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       await _firestore.collection('users').doc(user.uid).set(user.toMap());
-
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -114,7 +117,10 @@ class AuthCubit extends Cubit<AuthState> {
       final userCredential = await _authService.signInWithGoogle();
       final firebaseUser = userCredential.user!;
 
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final userDoc = await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
 
       if (!userDoc.exists) {
         final user = UserModel.initial(
@@ -125,7 +131,6 @@ class AuthCubit extends Cubit<AuthState> {
 
         await _firestore.collection('users').doc(user.uid).set(user.toMap());
       }
-
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -140,7 +145,6 @@ class AuthCubit extends Cubit<AuthState> {
           .collection('users')
           .doc(updatedUser.uid)
           .update(updatedUser.copyWith(updatedAt: DateTime.now()).toMap());
-
     } catch (e) {
       emit(AuthError('Fehler beim Aktualisieren des Profils: $e'));
     }
@@ -209,7 +213,6 @@ class AuthCubit extends Cubit<AuthState> {
     required String activityLevel,
     required String goal,
   }) {
-
     final bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
 
     final activityMultiplier = switch (activityLevel) {
@@ -226,7 +229,7 @@ class AuthCubit extends Cubit<AuthState> {
     // Adjust for goal
     final calories = switch (goal) {
       'Abnehmen' => tdee - 500,
-      'Muskelaufbau' => tdee + 300, 
+      'Muskelaufbau' => tdee + 300,
       'Halten' => tdee,
       _ => tdee,
     };
@@ -236,24 +239,18 @@ class AuthCubit extends Cubit<AuthState> {
 
   // Calculate macros based on calories and goal
   Map<String, int> _calculateMacros(int calories, String goal) {
-
     final proteinPercentage = switch (goal) {
       'Muskelaufbau' => 0.35,
       'Abnehmen' => 0.40,
       _ => 0.30,
     };
 
-    final protein = ((calories * proteinPercentage) / 4).round(); 
-    final fats = ((calories * 0.25) / 9).round(); 
+    final protein = ((calories * proteinPercentage) / 4).round();
+    final fats = ((calories * 0.25) / 9).round();
     final carbs = ((calories - (protein * 4) - (fats * 9)) / 4).round();
 
-    return {
-      'protein': protein,
-      'carbs': carbs,
-      'fats': fats,
-    };
+    return {'protein': protein, 'carbs': carbs, 'fats': fats};
   }
-
 
   Future<void> signOut() async {
     try {
@@ -262,6 +259,10 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthError('Fehler beim Abmelden: $e'));
     }
+  }
+
+  void resetToUnauthenticated() {
+    emit(Unauthenticated());
   }
 
   @override
