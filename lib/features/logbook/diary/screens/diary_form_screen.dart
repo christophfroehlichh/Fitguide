@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../models/diary_entry_model.dart';
 import '../cubit/diary_cubit.dart';
+import '../cubit/diary_state.dart';
 
 class DiaryFormScreen extends StatefulWidget {
   final DiaryEntryModel? entry;
@@ -29,10 +30,12 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
   late final TextEditingController _proteinController;
   late final TextEditingController _notesController;
   late DateTime _selectedDate;
+  DiaryEntryModel? _currentEntry;
 
   @override
   void initState() {
     super.initState();
+    _currentEntry = widget.entry;
     _weightController = TextEditingController(
       text: widget.entry?.weight.toString() ?? '',
     );
@@ -42,9 +45,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     _proteinController = TextEditingController(
       text: widget.entry?.proteinConsumed.toString() ?? '',
     );
-    _notesController = TextEditingController(
-      text: widget.entry?.notes ?? '',
-    );
+    _notesController = TextEditingController(text: widget.entry?.notes ?? '');
     _selectedDate = widget.entry?.date ?? DateTime.now();
   }
 
@@ -57,7 +58,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     super.dispose();
   }
 
-  bool get isEditing => widget.entry != null;
+  bool get isEditing => _currentEntry != null;
 
   bool _calculateCaloriesReached(int consumed) {
     final goal = widget.dailyCalories;
@@ -98,7 +99,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
 
     if (isEditing) {
       await cubit.updateEntry(
-        entry: widget.entry!,
+        entry: _currentEntry!,
         date: _selectedDate,
         weight: weight,
         caloriesConsumed: calories,
@@ -146,7 +147,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     );
 
     if (confirmed == true && mounted) {
-      await context.read<DiaryCubit>().deleteEntry(widget.entry!.id);
+      await context.read<DiaryCubit>().deleteEntry(_currentEntry!.id);
       if (mounted) {
         Navigator.pop(context);
       }
@@ -162,9 +163,44 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     );
 
     if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
+      final cubit = context.read<DiaryCubit>();
+      final state = cubit.state;
+
+      if (state is DiaryLoaded) {
+        final entriesForDate = state.entries
+            .where(
+              (e) =>
+                  e.date.year == picked.year &&
+                  e.date.month == picked.month &&
+                  e.date.day == picked.day,
+            )
+            .toList();
+
+        if (entriesForDate.isNotEmpty) {
+          final entry = entriesForDate.first;
+          setState(() {
+            _currentEntry = entry;
+            _selectedDate = picked;
+            _weightController.text = entry.weight.toString();
+            _caloriesController.text = entry.caloriesConsumed.toString();
+            _proteinController.text = entry.proteinConsumed.toString();
+            _notesController.text = entry.notes ?? '';
+          });
+        } else {
+          setState(() {
+            _currentEntry = null;
+            _selectedDate = picked;
+            _weightController.clear();
+            _caloriesController.clear();
+            _proteinController.clear();
+            _notesController.clear();
+          });
+        }
+      } else {
+        setState(() {
+          _selectedDate = picked;
+        });
+      }
     }
   }
 
@@ -207,7 +243,9 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
                 suffixText: 'kg',
                 border: OutlineInputBorder(),
               ),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Bitte Gewicht eingeben';
@@ -249,19 +287,23 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
                   children: [
                     Icon(
                       _calculateCaloriesReached(
-                              int.parse(_caloriesController.text))
+                            int.parse(_caloriesController.text),
+                          )
                           ? Icons.check_circle
                           : Icons.cancel,
                       size: 20,
-                      color: _calculateCaloriesReached(
-                              int.parse(_caloriesController.text))
+                      color:
+                          _calculateCaloriesReached(
+                            int.parse(_caloriesController.text),
+                          )
                           ? Colors.green
                           : Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       _calculateCaloriesReached(
-                              int.parse(_caloriesController.text))
+                            int.parse(_caloriesController.text),
+                          )
                           ? 'Ziel erreicht'
                           : 'Ziel nicht erreicht',
                       style: Theme.of(context).textTheme.bodySmall,
@@ -299,18 +341,24 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      _calculateProteinReached(int.parse(_proteinController.text))
+                      _calculateProteinReached(
+                            int.parse(_proteinController.text),
+                          )
                           ? Icons.check_circle
                           : Icons.cancel,
                       size: 20,
-                      color: _calculateProteinReached(
-                              int.parse(_proteinController.text))
+                      color:
+                          _calculateProteinReached(
+                            int.parse(_proteinController.text),
+                          )
                           ? Colors.green
                           : Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      _calculateProteinReached(int.parse(_proteinController.text))
+                      _calculateProteinReached(
+                            int.parse(_proteinController.text),
+                          )
                           ? 'Ziel erreicht'
                           : 'Ziel nicht erreicht',
                       style: Theme.of(context).textTheme.bodySmall,

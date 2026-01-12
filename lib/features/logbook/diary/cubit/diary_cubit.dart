@@ -10,11 +10,9 @@ class DiaryCubit extends Cubit<DiaryState> {
   final String userId;
   StreamSubscription<QuerySnapshot>? _entriesSubscription;
 
-  DiaryCubit({
-    required this.userId,
-    FirebaseFirestore? firestore,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        super(DiaryInitial()) {
+  DiaryCubit({required this.userId, FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      super(DiaryInitial()) {
     _loadEntries();
   }
 
@@ -52,6 +50,8 @@ class DiaryCubit extends Cubit<DiaryState> {
   }) async {
     try {
       final entryId = 'diary_${DateFormat('yyyyMMdd').format(date)}';
+
+      print('🔵 CREATE: ID=$entryId, Date=$date');
 
       final caloriesReached = _calculateCaloriesReached(
         caloriesConsumed,
@@ -103,6 +103,7 @@ class DiaryCubit extends Cubit<DiaryState> {
     String? notes,
   }) async {
     try {
+      final newDate = date ?? entry.date;
       final newCalories = caloriesConsumed ?? entry.caloriesConsumed;
       final newProtein = proteinConsumed ?? entry.proteinConsumed;
 
@@ -118,7 +119,13 @@ class DiaryCubit extends Cubit<DiaryState> {
         userGoal,
       );
 
+      final newEntryId = 'diary_${DateFormat('yyyyMMdd').format(newDate)}';
+
+      print('🟡 UPDATE: Old ID=${entry.id}, New ID=$newEntryId');
+      print('🟡 UPDATE: Date changed=${newEntryId != entry.id}');
+
       final updatedEntry = entry.copyWith(
+        id: newEntryId,
         date: date,
         weight: weight,
         caloriesConsumed: caloriesConsumed,
@@ -129,12 +136,28 @@ class DiaryCubit extends Cubit<DiaryState> {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('diary_entries')
-          .doc(updatedEntry.id)
-          .update(updatedEntry.toMap());
+      if (newEntryId != entry.id) {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('diary_entries')
+            .doc(entry.id)
+            .delete();
+
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('diary_entries')
+            .doc(newEntryId)
+            .set(updatedEntry.toMap());
+      } else {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('diary_entries')
+            .doc(updatedEntry.id)
+            .update(updatedEntry.toMap());
+      }
     } catch (e) {
       emit(DiaryError('Fehler beim Aktualisieren des Eintrags: $e'));
     }

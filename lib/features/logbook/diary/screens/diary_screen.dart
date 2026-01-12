@@ -16,9 +16,7 @@ class DiaryScreen extends StatelessWidget {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
         if (authState is! Authenticated) {
-          return const Scaffold(
-            body: Center(child: Text('Nicht angemeldet')),
-          );
+          return const Scaffold(body: Center(child: Text('Nicht angemeldet')));
         }
 
         return BlocProvider(
@@ -38,9 +36,7 @@ class DiaryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tagebuch'),
-      ),
+      appBar: AppBar(title: const Text('Tagebuch')),
       body: BlocBuilder<DiaryCubit, DiaryState>(
         builder: (context, state) {
           if (state is DiaryLoading) {
@@ -91,30 +87,14 @@ class DiaryView extends StatelessWidget {
 
           if (state is DiaryLoaded) {
             final today = DateTime.now();
-            final todayId = 'diary_${DateFormat('yyyyMMdd').format(today)}';
-
-            todayEntry = state.entries.firstWhere(
-              (entry) => entry.id == todayId,
-              orElse: () => state.entries.firstWhere(
+            try {
+              todayEntry = state.entries.firstWhere(
                 (entry) =>
                     entry.date.year == today.year &&
                     entry.date.month == today.month &&
                     entry.date.day == today.day,
-                orElse: () => DiaryEntryModel(
-                  id: '',
-                  date: DateTime.now(),
-                  weight: 0,
-                  caloriesReached: false,
-                  proteinReached: false,
-                  caloriesConsumed: 0,
-                  proteinConsumed: 0,
-                  createdAt: DateTime.now(),
-                  updatedAt: DateTime.now(),
-                ),
-              ),
-            );
-
-            if (todayEntry.id.isEmpty) {
+              );
+            } catch (e) {
               todayEntry = null;
             }
           }
@@ -177,30 +157,32 @@ class DiaryEntryCard extends StatelessWidget {
                   icon: const Icon(Icons.edit_outlined),
                   onPressed: () {
                     Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => BlocProvider.value(
-      value: context.read<DiaryCubit>(),
-      child: DiaryFormScreen(
-        entry: entry,
-        dailyCalories: dailyCalories,
-        dailyProtein: dailyProtein,
-        userGoal: context.read<AuthCubit>().state is Authenticated
-            ? (context.read<AuthCubit>().state as Authenticated).user.goal ?? 'gewichtHalten'
-            : 'gewichtHalten',
-      ),
-    ),
-  ),
-);
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<DiaryCubit>(),
+                          child: DiaryFormScreen(
+                            entry: entry,
+                            dailyCalories: dailyCalories,
+                            dailyProtein: dailyProtein,
+                            userGoal:
+                                context.read<AuthCubit>().state is Authenticated
+                                ? (context.read<AuthCubit>().state
+                                              as Authenticated)
+                                          .user
+                                          .goal ??
+                                      'gewichtHalten'
+                                : 'gewichtHalten',
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            _DataRow(
-              label: 'Gewicht',
-              value: '${entry.weight} kg',
-            ),
+            _DataRow(label: 'Gewicht', value: '${entry.weight} kg'),
             const SizedBox(height: 8),
             _DataRow(
               label: 'Kalorien',
@@ -220,8 +202,8 @@ class DiaryEntryCard extends StatelessWidget {
               Text(
                 entry.notes!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ],
@@ -236,28 +218,21 @@ class _DataRow extends StatelessWidget {
   final String value;
   final bool? status;
 
-  const _DataRow({
-    required this.label,
-    required this.value,
-    this.status,
-  });
+  const _DataRow({required this.label, required this.value, this.status});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+        Text(label, style: Theme.of(context).textTheme.bodyMedium),
         Row(
           children: [
             Text(
               value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (status != null) ...[
               const SizedBox(width: 8),
