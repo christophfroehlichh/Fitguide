@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:typed_data';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../models/diary_entry_model.dart';
 import '../cubit/diary_cubit.dart';
 import '../cubit/diary_state.dart';
@@ -32,10 +38,16 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
   late DateTime _selectedDate;
   DiaryEntryModel? _currentEntry;
 
+  final ImagePicker _picker = ImagePicker();
+  XFile? _selectedImage;
+  String? _existingPhotoUrl;
+  bool _isUploading = false;
+
   @override
   void initState() {
     super.initState();
     _currentEntry = widget.entry;
+    _existingPhotoUrl = widget.entry?.photoUrl;
     _weightController = TextEditingController(
       text: widget.entry?.weight.toString() ?? '',
     );
@@ -88,6 +100,101 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     }
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        maxWidth: 1920,
+        maxHeight: 1920,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        setState(() {
+          _selectedImage = image;
+          _existingPhotoUrl = null;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fehler beim Laden des Bildes: $e')),
+        );
+      }
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImage = null;
+      _existingPhotoUrl = null;
+    });
+  }
+
+  Future<String?> _uploadImage(String userId) async {
+    if (_selectedImage == null) return _existingPhotoUrl;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      final fileName =
+          'diary_${DateFormat('yyyyMMdd').format(_selectedDate)}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('users')
+          .child(userId)
+          .child('diary_photos')
+          .child(fileName);
+
+      Uint8List? compressedBytes;
+
+      if (kIsWeb) {
+        final bytes = await _selectedImage!.readAsBytes();
+        compressedBytes = await FlutterImageCompress.compressWithList(
+          bytes,
+          minWidth: 1920,
+          minHeight: 1080,
+          quality: 85,
+        );
+      } else {
+        final result = await FlutterImageCompress.compressWithFile(
+          _selectedImage!.path,
+          minWidth: 1920,
+          minHeight: 1080,
+          quality: 85,
+        );
+        compressedBytes = result;
+      }
+
+      if (compressedBytes == null) {
+        throw Exception('Komprimierung fehlgeschlagen');
+      }
+
+      final uploadTask = storageRef.putData(compressedBytes);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      setState(() {
+        _isUploading = false;
+      });
+
+      return downloadUrl;
+    } catch (e) {
+      setState(() {
+        _isUploading = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Fehler beim Hochladen: $e')));
+      }
+      return null;
+    }
+  }
+
   Future<void> _saveEntry() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -96,6 +203,8 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
     final calories = int.parse(_caloriesController.text.trim());
     final protein = int.parse(_proteinController.text.trim());
     final notes = _notesController.text.trim();
+
+    final photoUrl = await _uploadImage(cubit.userId);
 
     if (isEditing) {
       await cubit.updateEntry(
@@ -108,6 +217,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
         dailyProtein: widget.dailyProtein,
         userGoal: widget.userGoal,
         notes: notes.isEmpty ? null : notes,
+        photoUrl: photoUrl,
       );
     } else {
       await cubit.createEntry(
@@ -119,6 +229,7 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
         dailyProtein: widget.dailyProtein,
         userGoal: widget.userGoal,
         notes: notes.isEmpty ? null : notes,
+        photoUrl: photoUrl,
       );
     }
 
@@ -185,6 +296,8 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
             _caloriesController.text = entry.caloriesConsumed.toString();
             _proteinController.text = entry.proteinConsumed.toString();
             _notesController.text = entry.notes ?? '';
+            _existingPhotoUrl = entry.photoUrl;
+            _selectedImage = null;
           });
         } else {
           setState(() {
@@ -194,6 +307,8 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
             _caloriesController.clear();
             _proteinController.clear();
             _notesController.clear();
+            _existingPhotoUrl = null;
+            _selectedImage = null;
           });
         }
       } else {
@@ -202,6 +317,106 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
         });
       }
     }
+  }
+
+  Widget _buildPhotoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Foto (optional)', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 12),
+        if (_selectedImage != null || _existingPhotoUrl != null)
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: _selectedImage != null
+                      ? (kIsWeb
+                            ? Image.network(
+                                _selectedImage!.path,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(_selectedImage!.path),
+                                fit: BoxFit.cover,
+                              ))
+                      : Image.network(_existingPhotoUrl!, fit: BoxFit.cover),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  onPressed: _removeImage,
+                  icon: const Icon(Icons.close),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.black54,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          Container(
+            width: double.infinity,
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add_photo_alternate_outlined,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Kein Foto ausgewählt',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _pickImage(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: const Text('Galerie'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => _pickImage(ImageSource.camera),
+                icon: const Icon(Icons.camera_alt_outlined),
+                label: const Text('Kamera'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -376,12 +591,20 @@ class _DiaryFormScreenState extends State<DiaryFormScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: 24),
+            _buildPhotoSection(),
+            const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _saveEntry,
+              onPressed: _isUploading ? null : _saveEntry,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(isEditing ? 'Speichern' : 'Erstellen'),
+              child: _isUploading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(isEditing ? 'Speichern' : 'Erstellen'),
             ),
           ],
         ),

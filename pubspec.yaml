@@ -40,6 +40,7 @@ dependencies:
   firebase_core: ^3.9.0
   firebase_auth: ^5.3.4
   cloud_firestore: ^5.6.0
+  firebase_storage: ^12.4.10
   google_sign_in: ^6.2.2
 
   # State Management
@@ -49,6 +50,10 @@ dependencies:
 
   # Charts
   fl_chart: ^0.69.0
+
+  # Image
+  image_picker: ^1.0.7
+  flutter_image_compress: ^2.1.0
 
 dev_dependencies:
   flutter_test:

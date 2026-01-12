@@ -47,11 +47,10 @@ class DiaryCubit extends Cubit<DiaryState> {
     required int dailyProtein,
     required String userGoal,
     String? notes,
+    String? photoUrl,
   }) async {
     try {
       final entryId = 'diary_${DateFormat('yyyyMMdd').format(date)}';
-
-      print('🔵 CREATE: ID=$entryId, Date=$date');
 
       final caloriesReached = _calculateCaloriesReached(
         caloriesConsumed,
@@ -70,7 +69,7 @@ class DiaryCubit extends Cubit<DiaryState> {
         id: entryId,
         date: date,
         weight: weight,
-        photoUrl: null,
+        photoUrl: photoUrl,
         caloriesReached: caloriesReached,
         proteinReached: proteinReached,
         caloriesConsumed: caloriesConsumed,
@@ -101,6 +100,7 @@ class DiaryCubit extends Cubit<DiaryState> {
     required int dailyProtein,
     required String userGoal,
     String? notes,
+    String? photoUrl,
   }) async {
     try {
       final newDate = date ?? entry.date;
@@ -121,9 +121,6 @@ class DiaryCubit extends Cubit<DiaryState> {
 
       final newEntryId = 'diary_${DateFormat('yyyyMMdd').format(newDate)}';
 
-      print('🟡 UPDATE: Old ID=${entry.id}, New ID=$newEntryId');
-      print('🟡 UPDATE: Date changed=${newEntryId != entry.id}');
-
       final updatedEntry = entry.copyWith(
         id: newEntryId,
         date: date,
@@ -133,6 +130,7 @@ class DiaryCubit extends Cubit<DiaryState> {
         caloriesReached: caloriesReached,
         proteinReached: proteinReached,
         notes: notes,
+        photoUrl: photoUrl,
         updatedAt: DateTime.now(),
       );
 
