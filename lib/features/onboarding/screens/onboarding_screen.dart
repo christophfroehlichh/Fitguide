@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth/cubit/auth_cubit.dart';
+import '../../auth/cubit/auth_state.dart';
+import '../cubit/onboarding_cubit.dart';
+import '../cubit/onboarding_state.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -75,7 +78,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _completeOnboarding() {
     if (!_canProceed()) return;
 
-    context.read<AuthCubit>().completeOnboarding(
+    final authState = context.read<AuthCubit>().state;
+    if (authState is! Authenticated) return;
+
+    context.read<OnboardingCubit>().completeOnboarding(
+          uid: authState.user.uid,
           name: _nameController.text.trim(),
           age: int.parse(_ageController.text),
           height: double.parse(_heightController.text),
@@ -89,12 +96,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Einrichtung'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Column(
+    return BlocListener<OnboardingCubit, OnboardingState>(
+      listener: (context, state) {
+        if (state is OnboardingError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Einrichtung'),
+          automaticallyImplyLeading: false,
+        ),
+        body: Column(
         children: [
           LinearProgressIndicator(
             value: (_currentPage + 1) / 5,
@@ -141,6 +159,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

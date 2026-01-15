@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app_shell.dart';
 import '../onboarding/screens/onboarding_screen.dart';
+import '../onboarding/cubit/onboarding_cubit.dart';
 import 'cubit/auth_cubit.dart';
 import 'cubit/auth_state.dart';
 import 'screens/login_screen.dart';
@@ -49,7 +50,10 @@ class AuthWrapper extends StatelessWidget {
 
         if (state is Authenticated) {
           if (!state.user.hasCompletedOnboarding) {
-            return const OnboardingScreen();
+            return BlocProvider(
+              create: (context) => OnboardingCubit(),
+              child: const OnboardingScreen(),
+            );
           }
           return const AppShell();
         }
