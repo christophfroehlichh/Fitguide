@@ -12,7 +12,6 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -21,7 +20,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -33,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       context.read<AuthCubit>().registerWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text,
-            name: _nameController.text.trim(),
           );
     }
   }
@@ -94,24 +91,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
-
-                      // Name field
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
-                          prefixIcon: Icon(Icons.person_outlined),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Bitte Namen eingeben';
-                          }
-                          return null;
-                        },
-                        enabled: !isLoading,
-                      ),
-                      const SizedBox(height: 16),
 
                       // Email field
                       TextFormField(

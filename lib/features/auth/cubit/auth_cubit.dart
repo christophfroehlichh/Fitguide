@@ -88,7 +88,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> registerWithEmailAndPassword({
     required String email,
     required String password,
-    required String name,
   }) async {
     try {
       emit(AuthLoading());
@@ -101,7 +100,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = UserModel.initial(
         uid: userCredential.user!.uid,
         email: email,
-        name: name,
+        name: '',
       );
 
       await _firestore.collection('users').doc(user.uid).set(user.toMap());
