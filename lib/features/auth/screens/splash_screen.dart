@@ -10,7 +10,6 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // TODO: Logo hier einfügen
             Icon(
               Icons.fitness_center,
               size: 100,
@@ -19,9 +18,9 @@ class SplashScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               'FitGuide',
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 48),
             const CircularProgressIndicator(),

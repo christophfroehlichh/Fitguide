@@ -6,25 +6,23 @@ class TemplateSeedScript {
   final FirebaseFirestore _firestore;
 
   TemplateSeedScript({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   Future<void> seedTemplates() async {
     try {
       final templatesExist = await _checkTemplatesExist();
       if (templatesExist) {
-        print('Templates existieren bereits. Seeding übersprungen.');
         return;
       }
 
-      final jsonString = await rootBundle.loadString('data/firebase_templates.json');
+      final jsonString = await rootBundle.loadString(
+        'data/firebase_templates.json',
+      );
       final data = json.decode(jsonString) as Map<String, dynamic>;
 
       await _seedExercises(data['template_exercises'] as List);
       await _seedWorkouts(data['template_workouts'] as List);
-
-      print('Templates erfolgreich geladen!');
     } catch (e) {
-      print('Fehler beim Seeding: $e');
       rethrow;
     }
   }
@@ -49,7 +47,6 @@ class TemplateSeedScript {
     }
 
     await batch.commit();
-    print('${exercisesData.length} Übungen geladen.');
   }
 
   Future<void> _seedWorkouts(List workoutsData) async {
@@ -64,6 +61,5 @@ class TemplateSeedScript {
     }
 
     await batch.commit();
-    print('${workoutsData.length} Workouts geladen.');
   }
 }

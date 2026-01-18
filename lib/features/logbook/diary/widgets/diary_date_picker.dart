@@ -16,6 +16,8 @@ class DiaryDatePicker extends StatelessWidget {
   });
 
   Future<void> _selectDate(BuildContext context) async {
+    final cubit = context.read<DiaryCubit>();
+
     final picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -24,7 +26,6 @@ class DiaryDatePicker extends StatelessWidget {
     );
 
     if (picked != null) {
-      final cubit = context.read<DiaryCubit>();
       final state = cubit.state;
 
       if (state is DiaryLoaded) {

@@ -12,25 +12,17 @@ class StreakDisplay extends StatefulWidget {
 
 class _StreakDisplayState extends State<StreakDisplay> {
   int? _cachedStreak;
-  int? _cachedEntriesLength;
-
-  @override
-  void didUpdateWidget(StreakDisplay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.diaryEntries.length != widget.diaryEntries.length) {
-      _cachedStreak = null;
-    }
-  }
+  List<DiaryEntryModel>? _cachedEntries;
 
   int _calculateStreak() {
-    if (_cachedStreak != null &&
-        _cachedEntriesLength == widget.diaryEntries.length) {
+    // Cache-Check
+    if (_cachedStreak != null && _cachedEntries == widget.diaryEntries) {
       return _cachedStreak!;
     }
 
     if (widget.diaryEntries.isEmpty) {
       _cachedStreak = 0;
-      _cachedEntriesLength = 0;
+      _cachedEntries = widget.diaryEntries;
       return 0;
     }
 
@@ -87,7 +79,7 @@ class _StreakDisplayState extends State<StreakDisplay> {
     }
 
     _cachedStreak = streak;
-    _cachedEntriesLength = widget.diaryEntries.length;
+    _cachedEntries = widget.diaryEntries;
     return streak;
   }
 
@@ -108,11 +100,11 @@ class _StreakDisplayState extends State<StreakDisplay> {
           Icon(
             Icons.local_fire_department,
             size: 32,
-            color: hasStreak
-                ? Colors.deepOrange
-                : Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.3),
+            color:
+                hasStreak
+                      ? Colors.deepOrange
+                      : Theme.of(context).colorScheme.onSurfaceVariant
+                  ..withValues(alpha: 0.3),
           ),
           const SizedBox(width: 8),
           Text(
@@ -123,7 +115,7 @@ class _StreakDisplayState extends State<StreakDisplay> {
                   ? Theme.of(context).colorScheme.onSurface
                   : Theme.of(
                       context,
-                    ).colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
             ),
           ),
         ],

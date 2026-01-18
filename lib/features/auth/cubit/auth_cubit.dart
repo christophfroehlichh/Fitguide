@@ -10,12 +10,10 @@ class AuthCubit extends Cubit<AuthState> {
   final FirebaseFirestore _firestore;
   StreamSubscription<UserModel?>? _userSubscription;
 
-  AuthCubit({
-    required AuthService authService,
-    FirebaseFirestore? firestore,
-  }) : _authService = authService,
-       _firestore = firestore ?? FirebaseFirestore.instance,
-       super(AuthInitial()) {
+  AuthCubit({required AuthService authService, FirebaseFirestore? firestore})
+    : _authService = authService,
+      _firestore = firestore ?? FirebaseFirestore.instance,
+      super(AuthInitial()) {
     _initialize();
   }
   void _initialize() {
@@ -66,16 +64,12 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     try {
-      print('1. Emitting AuthLoading');
       emit(AuthLoading());
       await _authService.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print('2. Login successful');
     } catch (e) {
-      print('3. Login failed: $e');
-      print('4. Emitting AuthError');
       emit(AuthError('E-Mail oder Passwort nicht korrekt')); // KEIN const!
     }
   }

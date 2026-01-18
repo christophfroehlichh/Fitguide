@@ -10,9 +10,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit({
     FirebaseFirestore? firestore,
     TemplateService? templateService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _templateService = templateService ?? TemplateService(),
-        super(OnboardingInitial());
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _templateService = templateService ?? TemplateService(),
+       super(OnboardingInitial());
 
   Future<void> completeOnboarding({
     required String uid,
@@ -56,12 +56,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       });
 
       try {
-        await _templateService.initializeUserTemplates(
-          uid,
-          trainingFrequency,
-        );
+        await _templateService.initializeUserTemplates(uid, trainingFrequency);
       } catch (e) {
-        print('Template-Initialisierung fehlgeschlagen: $e');
+        //
       }
 
       emit(OnboardingSuccess());
