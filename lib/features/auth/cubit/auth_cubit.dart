@@ -2,27 +2,22 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../core/services/auth_service.dart';
-import '../../../core/services/template_service.dart';
 import '../models/user_model.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthService _authService;
   final FirebaseFirestore _firestore;
-  final TemplateService _templateService;
   StreamSubscription<UserModel?>? _userSubscription;
 
   AuthCubit({
     required AuthService authService,
     FirebaseFirestore? firestore,
-    TemplateService? templateService,
   }) : _authService = authService,
        _firestore = firestore ?? FirebaseFirestore.instance,
-       _templateService = templateService ?? TemplateService(),
        super(AuthInitial()) {
     _initialize();
   }
-
   void _initialize() {
     _authService.authStateChanges.listen((firebaseUser) {
       if (firebaseUser == null) {
