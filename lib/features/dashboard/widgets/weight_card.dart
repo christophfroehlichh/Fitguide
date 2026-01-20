@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class WeightDataPoint {
   final DateTime date;
@@ -33,26 +34,25 @@ class WeightCard extends StatelessWidget {
               children: [
                 Text(
                   'Aktuelles Gewicht',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 if (currentWeight != null)
                   Text(
                     '${currentWeight!.toStringAsFixed(1)} kg',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   )
                 else
                   Text(
                     '- kg',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
               ],
             ),
@@ -66,8 +66,8 @@ class WeightCard extends StatelessWidget {
                       child: Text(
                         'Keine Gewichtsdaten vorhanden',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     )
                   : _buildChart(context),
@@ -110,7 +110,54 @@ class WeightCard extends StatelessWidget {
           },
         ),
         titlesData: FlTitlesData(
-          show: false,
+          show: true,
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              interval: yMax - yMin,
+              getTitlesWidget: (value, meta) {
+                if ((value - yMin).abs() < 0.1 || (value - yMax).abs() < 0.1) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Text(
+                      value == yMin
+                          ? minWeight.toStringAsFixed(1)
+                          : maxWeight.toStringAsFixed(1),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 24,
+              getTitlesWidget: (value, meta) {
+                if (value == 0 || value == (sortedData.length - 1).toDouble()) {
+                  final date = sortedData[value.toInt()].date;
+                  return Text(
+                    DateFormat('dd.MM').format(date),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ),
         borderData: FlBorderData(show: false),
         minX: 0,
@@ -136,7 +183,9 @@ class WeightCard extends StatelessWidget {
             ),
             belowBarData: BarAreaData(
               show: true,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.1),
             ),
           ),
         ],

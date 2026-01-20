@@ -45,12 +45,18 @@ class DashboardScreen extends StatelessWidget {
                       )
                       .toList();
 
+                  final sortedEntries = List<DiaryEntryModel>.from(diaryEntries)
+                    ..sort((a, b) => b.date.compareTo(a.date));
+                  final currentWeight =
+                      sortedEntries.isNotEmpty ? sortedEntries.first.weight : user.weight;
+
                   return _buildDashboardContent(
                     context,
                     user,
                     hasData,
                     weightHistory,
                     diaryEntries,
+                    currentWeight,
                   );
                 },
               ),
@@ -67,6 +73,7 @@ class DashboardScreen extends StatelessWidget {
     bool hasData,
     List<WeightDataPoint> weightHistory,
     List<DiaryEntryModel> diaryEntries,
+    double? currentWeight,
   ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -79,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 28),
           const SectionTitle('Gewicht'),
           const SizedBox(height: 12),
-          WeightCard(currentWeight: user.weight, weightHistory: weightHistory),
+          WeightCard(currentWeight: currentWeight, weightHistory: weightHistory),
           const SizedBox(height: 28),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
