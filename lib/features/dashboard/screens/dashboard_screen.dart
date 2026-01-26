@@ -88,16 +88,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 12),
           WeightCard(currentWeight: currentWeight, weightHistory: weightHistory),
           const SizedBox(height: 28),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SectionTitle('Makronährstoffe'),
-              TextButton(
-                onPressed: hasData ? () {} : null,
-                child: const Text('Anpassen'),
-              ),
-            ],
-          ),
+          const SectionTitle('Makronährstoffe'),
           const SizedBox(height: 12),
           if (hasData)
             MacroOverview(
