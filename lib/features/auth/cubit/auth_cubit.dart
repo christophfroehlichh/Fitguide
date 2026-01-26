@@ -98,32 +98,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    try {
-      emit(AuthLoading());
-
-      final userCredential = await _authService.signInWithGoogle();
-      final firebaseUser = userCredential.user!;
-
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .get();
-
-      if (!userDoc.exists) {
-        final user = UserModel.initial(
-          uid: firebaseUser.uid,
-          email: firebaseUser.email!,
-          name: firebaseUser.displayName ?? '',
-        );
-
-        await _firestore.collection('users').doc(user.uid).set(user.toMap());
-      }
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
   Future<void> updateUserProfile(UserModel updatedUser) async {
     try {
       final currentState = state;

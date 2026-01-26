@@ -33,10 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _handleGoogleSignIn() {
-    context.read<AuthCubit>().signInWithGoogle();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,33 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 )
                               : const Text('Anmelden'),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Divider
-                      Row(
-                        children: [
-                          const Expanded(child: Divider()),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'ODER',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                          const Expanded(child: Divider()),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Google Sign-In button
-                      OutlinedButton.icon(
-                        onPressed: isLoading ? null : _handleGoogleSignIn,
-                        icon: const Icon(Icons.g_mobiledata, size: 24),
-                        label: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Text('Mit Google anmelden'),
                         ),
                       ),
                       const SizedBox(height: 24),
