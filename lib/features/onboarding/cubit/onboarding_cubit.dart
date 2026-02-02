@@ -28,7 +28,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     try {
       emit(OnboardingLoading());
 
-      final calories = _calculateDailyCalories(
+      final calories = OnboardingCubit.calculateDailyCalories(
         age: age,
         weight: weight,
         height: height,
@@ -36,7 +36,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         goal: goal,
       );
 
-      final macros = _calculateMacros(calories, goal);
+      final macros = OnboardingCubit.calculateMacros(calories, goal);
 
       await _firestore.collection('users').doc(uid).update({
         'name': name,
@@ -67,7 +67,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     }
   }
 
-  int _calculateDailyCalories({
+  static int calculateDailyCalories({
     required int age,
     required double weight,
     required double height,
@@ -97,7 +97,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     return calories.round();
   }
 
-  Map<String, int> _calculateMacros(int calories, String goal) {
+  static Map<String, int> calculateMacros(int calories, String goal) {
     final proteinPercentage = switch (goal) {
       'Muskelaufbau' => 0.35,
       'Abnehmen' => 0.40,

@@ -165,12 +165,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildNamePage() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 80),
           Text(
             'Wie heißt du?',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -193,12 +194,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildBodyDataPage() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 40),
           Text(
             'Deine Körperdaten',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -254,12 +256,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildGoalPage() {
     final goals = ['Abnehmen', 'Muskelaufbau', 'Halten'];
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 80),
           Text(
             'Was ist dein Ziel?',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -303,62 +306,62 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'Extra Active': 'Sehr hohe Aktivität (täglich + körperliche Arbeit)',
     };
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Wie aktiv bist du?',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            ...activities.entries.map((entry) {
-              final isSelected = _activityLevel == entry.key;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: FilterChip(
-                  label: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          entry.value,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 40),
+          Text(
+            'Wie aktiv bist du?',
+            style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          ...activities.entries.map((entry) {
+            final isSelected = _activityLevel == entry.key;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: FilterChip(
+                label: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        entry.value,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      _activityLevel = entry.key;
-                    });
-                  },
-                  showCheckmark: false,
                 ),
-              );
-            }),
-          ],
-        ),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    _activityLevel = entry.key;
+                  });
+                },
+                showCheckmark: false,
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
 
   Widget _buildTrainingPage() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 40),
           Text(
             'Dein Training',
             style: Theme.of(context).textTheme.headlineMedium,
