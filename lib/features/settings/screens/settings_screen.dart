@@ -180,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: _selectedGoal,
+            initialValue: _selectedGoal,
             decoration: const InputDecoration(
               labelText: 'Ziel',
               border: OutlineInputBorder(),
@@ -192,9 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             }).toList(),
             onChanged: (value) {
-              setState(() {
-                _selectedGoal = value;
-              });
+              _selectedGoal = value;
             },
           ),
           const SizedBox(height: 16),
