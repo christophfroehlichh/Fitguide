@@ -57,7 +57,6 @@ class ExerciseCubit extends Cubit<ExerciseState> {
   Future<void> createExercise({
     required String name,
     required String category,
-    String? iconUrl,
   }) async {
     try {
       final exerciseId = _firestore
@@ -71,7 +70,7 @@ class ExerciseCubit extends Cubit<ExerciseState> {
         id: exerciseId,
         name: name,
         category: category,
-        iconUrl: iconUrl ?? '',
+        iconUrl: '',
         templateId: null,
       );
 

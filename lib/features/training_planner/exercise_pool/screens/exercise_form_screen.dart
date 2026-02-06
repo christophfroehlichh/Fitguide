@@ -15,7 +15,6 @@ class ExerciseFormScreen extends StatefulWidget {
 class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  late final TextEditingController _iconUrlController;
   String _selectedCategory = 'Chest';
 
   static const categories = [
@@ -32,14 +31,12 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.exercise?.name ?? '');
-    _iconUrlController = TextEditingController(text: widget.exercise?.iconUrl ?? '');
     _selectedCategory = widget.exercise?.category ?? 'Chest';
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _iconUrlController.dispose();
     super.dispose();
   }
 
@@ -55,14 +52,12 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
         widget.exercise!.copyWith(
           name: _nameController.text.trim(),
           category: _selectedCategory,
-          iconUrl: _iconUrlController.text.trim(),
         ),
       );
     } else {
       await cubit.createExercise(
         name: _nameController.text.trim(),
         category: _selectedCategory,
-        iconUrl: _iconUrlController.text.trim(),
       );
     }
 
@@ -154,16 +149,6 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                   });
                 }
               },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _iconUrlController,
-              decoration: const InputDecoration(
-                labelText: 'Icon URL (optional)',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.image_outlined),
-                helperText: 'URL zum Übungs-Icon',
-              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
